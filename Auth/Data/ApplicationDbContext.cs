@@ -6,7 +6,7 @@ namespace Auth.Data
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
+            : base(options) { }
 
         public DbSet<User> AUTH_Users { get; set; }
     }
