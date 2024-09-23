@@ -2,17 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="ApiEndpoints\" />
     <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
     <Folder Include="Data\" />
     <Folder Include="Models\" />
-    <Folder Include="DTO\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
