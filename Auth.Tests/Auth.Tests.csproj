@@ -34,6 +34,10 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <ProjectReference Include="..\Auth\Auth.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
