@@ -1,12 +1,13 @@
 ﻿using Auth.Data;
-using Auth.DTO;
+using Auth.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auth.DAL
 {
     public interface IUserAccessor
     {
-        Task<UserDto> GetByEmailAsync(string email);
+        Task<User> GetByEmailAsync(string email);
+        Task<bool> AnyAsync();
     }
 
     public class UserAccessor : IUserAccessor
@@ -16,11 +17,13 @@ namespace Auth.DAL
         public UserAccessor(ApplicationDbContext applicationDbContext)
             => _applicationDbContext = applicationDbContext;
 
-        public async Task<UserDto> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email)
             => await _applicationDbContext.AUTH_Users
                 .AsNoTracking()
                 .Where(u => u.Email.Equals(email))
-                .Select(u => new UserDto(u.Email, u.PasswordHash))
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
+
+        public async Task<bool> AnyAsync()
+            => await _applicationDbContext.AUTH_Users.AnyAsync();
     }
 }
