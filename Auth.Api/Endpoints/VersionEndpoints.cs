@@ -6,12 +6,12 @@ public static class VersionEndpoints
 {
     public static void MapVersionEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api", (IVersionService versionService) =>
-        {
-            var version = versionService.GetVersion();
-            return Results.Ok(new { version });
-        })
-        .WithTags("Version")
-        .WithName("GetVersion");
+        app.MapGet("/", ServiceAlive);
+        app.MapGet("/api", ServiceAlive)
+            .WithTags("Version")
+            .WithName("GetVersion");
+
+        static string ServiceAlive(IVersionService versionService)
+            => versionService.GetVersion();
     }
 }
