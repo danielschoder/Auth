@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Auth.BLL;
 using Auth.DTO;
 
 namespace Auth.ApiEndpoints;
@@ -9,6 +10,23 @@ public static class ApiEndpoints
     {
         app.MapGet("/", ServiceAlive);
         app.MapGet("/api", ServiceAlive);
+
+        app.MapPost("/api/login", async (LoginDto loginDto, IUserManager userManager) =>
+        {
+            try
+            {
+                var userDto = await userManager.LoginAsync(loginDto);
+                return Results.Ok(new LoginResponse { Jwt = userDto.Jwt });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Results.Unauthorized();
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { ex.Message });
+            }
+        });
 
         app.UseCors(builder =>
             {
