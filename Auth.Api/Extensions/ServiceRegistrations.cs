@@ -1,12 +1,11 @@
-﻿using Auth.Application.Interfaces.Persistence;
-using Auth.Domain.Common.Interfaces;
+﻿using Auth.Domain.Common.Interfaces;
 using Auth.Infrastructure.Persistence;
 using Auth.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Api.Extensions;
 
-public static class InfrastructureServiceRegistrations
+public static class ServiceRegistrations
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
@@ -14,14 +13,10 @@ public static class InfrastructureServiceRegistrations
         return services;
     }
 
-    public static IServiceCollection AddDbContext(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
-
         return services;
     }
 }
