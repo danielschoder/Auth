@@ -1,4 +1,5 @@
-﻿using Auth.Application.Services;
+﻿using Auth.Application.Services.Handlers.QueryHandlers;
+using MediatR;
 
 namespace Auth.Api.Endpoints;
 
@@ -6,12 +7,12 @@ public static class VersionEndpoints
 {
     public static void MapVersionEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", ServiceAlive);
-        app.MapGet("/api", ServiceAlive)
+        app.MapGet("/", GetVersionAsync);
+        app.MapGet("/api", GetVersionAsync)
             .WithTags("Version")
             .WithName("GetVersion");
 
-        static string ServiceAlive(IVersionService versionService)
-            => versionService.GetVersion();
+        static async Task<IResult> GetVersionAsync(IMediator mediator)
+            => Results.Ok(await mediator.Send(new GetVersion.Query()));
     }
 }
