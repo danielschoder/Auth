@@ -4,6 +4,7 @@ using Auth.Application.Services.Handlers.QueryHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetVersion).Assembly));
 builder.Services.AddInfrastructureServices();
 
