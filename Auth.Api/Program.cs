@@ -8,17 +8,22 @@ builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetVersion).Assembly));
 builder.Services.AddInfrastructureServices();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyPolicy", policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowAnyOrigin();
+    });
+});
+
 var app = builder.Build();
 
 app.MapVersionEndpoints();
 app.MapAuthEndpoints();
 
-app.UseCors(builder =>
-{
-    builder.AllowAnyHeader();
-    builder.AllowAnyMethod();
-    builder.AllowAnyOrigin();
-});
+app.UseCors("AllowAnyPolicy");
 app.UseHttpsRedirection();
 
 app.Run();
