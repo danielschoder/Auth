@@ -1,5 +1,0 @@
-@Auth_HostAddress = https://localhost:7208
-
-GET {{Auth_HostAddress}}/api
-
-###
