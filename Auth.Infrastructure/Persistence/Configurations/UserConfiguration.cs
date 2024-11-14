@@ -10,5 +10,6 @@ public class UserConfiguration
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Email).IsRequired().HasMaxLength(1023);
         builder.Property(e => e.PasswordHash).IsRequired().HasMaxLength(1023);
+        builder.HasIndex(e => e.Email).IsUnique();
     }
 }

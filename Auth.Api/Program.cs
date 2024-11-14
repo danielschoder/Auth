@@ -11,6 +11,7 @@ builder.Services.AddInfrastructureServices();
 var app = builder.Build();
 
 app.MapVersionEndpoints();
+app.MapAuthEndpoints();
 
 app.UseHttpsRedirection();
 

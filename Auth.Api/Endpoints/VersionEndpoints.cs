@@ -8,9 +8,7 @@ public static class VersionEndpoints
     public static void MapVersionEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/", GetVersionAsync);
-        app.MapGet("/api", GetVersionAsync)
-            .WithTags("Version")
-            .WithName("GetVersion");
+        app.MapGet("/api", GetVersionAsync);
 
         static async Task<IResult> GetVersionAsync(IMediator mediator)
             => Results.Ok(await mediator.Send(new GetVersion.Query()));

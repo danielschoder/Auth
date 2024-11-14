@@ -1,26 +1,26 @@
-@Formula1.Api_HostAddress = https://localhost:7153
+@Auth.Api_HostAddress = https://localhost:7153
 
 ### 
 
-POST {{Formula1.Api_HostAddress}}/api/login
+POST {{Auth.Api_HostAddress}}/api/login
 Content-Type: application/json
 {
-  "email": "admin"
+  "email": "admin",
   "password": "admin"
 }
 
 ###
 
-POST {{Formula1.Api_HostAddress}}/api/logout
+POST {{Auth.Api_HostAddress}}/api/logout
 Content-Type: application/json
 
 ###
 
-POST {{Formula1.Api_HostAddress}}/api/register
+POST {{Auth.Api_HostAddress}}/api/register
 Content-Type: application/json
 {
-  "year": {{year}},
-  "round": 1
+  "email": "admin",
+  "password": "admin"
 }
 
 ###
