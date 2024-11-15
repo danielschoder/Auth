@@ -1,4 +1,5 @@
-@Auth.Api_HostAddress = https://localhost:7153
+# @Auth.Api_HostAddress = https://localhost:7153
+@Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
 
 ### 
 
@@ -8,11 +9,6 @@ Content-Type: application/json
   "email": "admin",
   "password": "admin"
 }
-
-###
-
-POST {{Auth.Api_HostAddress}}/api/logout
-Content-Type: application/json
 
 ###
 

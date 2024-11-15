@@ -1,11 +1,12 @@
-﻿@Formula1.Api_HostAddress = https://localhost:7153
+﻿# @Auth.Api_HostAddress = https://localhost:7153
+@Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
 
 ### Alive
 
-GET {{Formula1.Api_HostAddress}}/api
+GET {{Auth.Api_HostAddress}}/api
 Accept: application/json
 
 ### Error
 
-GET {{Formula1.Api_HostAddress}}/error
+GET {{Auth.Api_HostAddress}}/error
 Accept: application/json

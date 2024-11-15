@@ -1,6 +1,7 @@
 using Auth.Api.Endpoints;
 using Auth.Api.Extensions;
 using Auth.Application.Services.Handlers.QueryHandlers;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,14 @@ builder.Services.AddCors(options =>
               .AllowAnyOrigin();
     });
 });
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 app.MapAuthEndpoints();
 app.MapVersionEndpoints();
