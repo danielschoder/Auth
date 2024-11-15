@@ -23,21 +23,16 @@ public class LoginUser(
         var password = command.LoginDto.Password?.Trim();
         if (string.IsNullOrWhiteSpace(email))
         {
-            return new AuthResponse("Please provide an email.", unauthorized: false);
+            return new AuthResponse(ErrorMessage: "Email|Please provide an email.");
         }
         if (string.IsNullOrWhiteSpace(password))
         {
-            return new AuthResponse("Please provide a password.", unauthorized: false);
+            return new AuthResponse(ErrorMessage: "Password|Please provide a password.");
         }
         var user = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
-        if (user is null)
-        {
-            return new AuthResponse("Invalid credentials.", unauthorized: true);
-        }
-        if (!_passwordHelper.PasswordIsVerified(user.PasswordHash, password))
-        {
-            return new AuthResponse("Invalid credentials.", unauthorized: true);
-        };
-        return new AuthResponse(_tokenProvider.Create(user));
+        return user is not null && _passwordHelper.PasswordIsVerified(user.PasswordHash, password) ?
+            new AuthResponse(Jwt: _tokenProvider.Create(user)) :
+            new AuthResponse(Unauthorized: true);
+        // Update Last Login DateTime
     }
 }

@@ -27,16 +27,16 @@ public class RegisterUser(
         var password = command.RegisterDto.Password?.Trim();
         if (string.IsNullOrWhiteSpace(email))
         {
-            return new AuthResponse("Please provide an email.", unauthorized: false);
+            return new AuthResponse(ErrorMessage: "Email|Please provide an email.");
         }
         if (string.IsNullOrWhiteSpace(password))
         {
-            return new AuthResponse("Please provide a password.", unauthorized: false);
+            return new AuthResponse(ErrorMessage: "Password|Please provide a password.");
         }
         var existingUser = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
         if (existingUser is not null)
         {
-            return new AuthResponse("A user with this email already exists.", unauthorized: false);
+            return new AuthResponse(ErrorMessage: "A user with this email already exists.");
         }
         var now = _dateTimeProvider.UtcNow;
         var newUser = new User
@@ -47,7 +47,6 @@ public class RegisterUser(
             LastLoginDateTime = now
         };
         await _userRepository.AddUserAsync(newUser, cancellationToken);
-        return new AuthResponse(_tokenProvider.Create(newUser));
+        return new AuthResponse(Jwt: _tokenProvider.Create(newUser));
     }
 }
-
