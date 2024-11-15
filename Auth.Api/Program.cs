@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetVersion).Assembly));
 builder.Services.AddInfrastructureServices();
+builder.Services.AddExternalServices();
 
 builder.Services.AddCors(options =>
 {
@@ -20,8 +21,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.MapVersionEndpoints();
 app.MapAuthEndpoints();
+app.MapVersionEndpoints();
+app.MapVisitorsEndpoints();
 
 app.UseCors("AllowAnyPolicy");
 app.UseHttpsRedirection();

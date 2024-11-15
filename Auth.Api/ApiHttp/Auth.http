@@ -24,3 +24,8 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{Auth.Api_HostAddress}}/api/visitors
+Content-Type: application/json
+
+###
