@@ -16,6 +16,7 @@ public class UserRepository(
 
     public async Task AddAsync(User user, CancellationToken cancellationToken)
     {
+        user.CreatedDateTime = user.LastLoginDateTime = _dateTimeProvider.UtcNow;
         await _context.AUTH_Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }

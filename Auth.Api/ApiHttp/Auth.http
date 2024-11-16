@@ -15,8 +15,8 @@ Content-Type: application/json
 POST {{Auth.Api_HostAddress}}/api/register
 Content-Type: application/json
 {
-  "email": "admin",
-  "password": "admin"
+  "email": "",
+  "password": ""
 }
 
 ###
