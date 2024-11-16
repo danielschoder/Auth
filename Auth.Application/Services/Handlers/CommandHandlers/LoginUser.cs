@@ -1,5 +1,4 @@
-﻿using Auth.Application.Extensions;
-using Auth.Application.Interfaces;
+﻿using Auth.Application.Interfaces;
 using Auth.Contracts.DTOs;
 using Auth.Contracts.Responses;
 using MediatR;
@@ -32,7 +31,7 @@ public class LoginUser(
         {
             return new AuthResponse(Authorized: false);
         }
-        _mediator.PublishInBackground(new UpdateLastLogin.Notification(user.Id), cancellationToken);
+        await _mediator.Publish(new UpdateLastLogin.Notification(user.Id), cancellationToken);
         return new AuthResponse(Jwt: _tokenProvider.Create(user));
     }
 }
