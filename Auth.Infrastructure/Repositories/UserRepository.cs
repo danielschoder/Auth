@@ -14,18 +14,18 @@ public class UserRepository(
     private readonly ApplicationDbContext _context = context;
     private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-    public async Task AddAsync(User user, CancellationToken cancellationToken)
+    public async Task AddAsync(User user)
     {
         user.CreatedDateTime = user.LastLoginDateTime = _dateTimeProvider.UtcNow;
-        await _context.AUTH_Users.AddAsync(user, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.AUTH_Users.AddAsync(user);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken)
-        => await _context.AUTH_Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+    public async Task<User> GetByEmailAsync(string email)
+        => await _context.AUTH_Users.FirstOrDefaultAsync(u => u.Email == email);
 
-    public async Task UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken)
+    public async Task UpdateLastLoginAsync(Guid id)
         => await _context.AUTH_Users
             .Where(u => u.Id == id)
-            .ExecuteUpdateAsync(u => u.SetProperty(x => x.LastLoginDateTime, _dateTimeProvider.UtcNow), cancellationToken);
+            .ExecuteUpdateAsync(u => u.SetProperty(x => x.LastLoginDateTime, _dateTimeProvider.UtcNow));
 }

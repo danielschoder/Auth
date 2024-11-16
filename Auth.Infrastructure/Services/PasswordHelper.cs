@@ -10,7 +10,7 @@ public class PasswordHelper : IPasswordHelper
     public string HashPassword(string password)
         => passwordHasher.HashPassword(null, password);
 
-    public bool PasswordIsVerified(string hashedPassword, string password)
+    public bool IsPasswordVerified(string hashedPassword, string password)
         => passwordHasher.VerifyHashedPassword(null, hashedPassword, password)
             == PasswordVerificationResult.Success;
 }

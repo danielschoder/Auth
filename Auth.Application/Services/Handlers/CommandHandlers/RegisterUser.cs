@@ -1,4 +1,5 @@
-﻿using Auth.Application.Interfaces;
+﻿using Auth.Application.Extensions;
+using Auth.Application.Interfaces;
 using Auth.Contracts.DTOs;
 using Auth.Contracts.ExternalServices;
 using Auth.Contracts.Responses;
@@ -18,28 +19,77 @@ public class RegisterUser(
     private readonly IPasswordHelper _passwordHelper = passwordHelper;
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly ISlackClient _slackClient = slackClient;
+    private string _email;
+    private string _password;
+    private string _passwordHash;
+    private User _newUser;
+    private AuthResponse _response;
 
     public record Command(RegisterDto RegisterDto) : IRequest<AuthResponse>;
 
     public async Task<AuthResponse> Handle(Command command, CancellationToken cancellationToken)
+        => await command.Error(
+        [
+            (() => FormatEmailPassword(command), null),
+            (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
+            (CheckEmail, new AuthResponse(ErrorMessage: "Please provide an email.")),
+            (CheckPassword, new AuthResponse(ErrorMessage: "Please provide a password.")),
+            (GetUser, new AuthResponse(ErrorMessage: "A user with this email already exists.")),
+            (CreatePasswordHash, null),
+            (AddUserAsync, null),
+            (SendNewUserNotification, null),
+            (CreateJwt, null)
+        ]) ??
+        _response;
+
+    private Task<bool> FormatEmailPassword(Command command)
     {
-        var error = command.RegisterDto.Validate();
-        if (error is not null)
+        _email = command.RegisterDto.Email?.Trim().ToLower();
+        _password = command.RegisterDto.Password;
+        return Task.FromResult(true);
+    }
+
+    private Task<bool> CheckEmailPassword()
+        => Task.FromResult(!string.IsNullOrWhiteSpace(_email) || !string.IsNullOrWhiteSpace(_password));
+
+    private Task<bool> CheckEmail()
+        => Task.FromResult(!string.IsNullOrWhiteSpace(_email));
+
+    private Task<bool> CheckPassword()
+        => Task.FromResult(!string.IsNullOrWhiteSpace(_password));
+
+    private async Task<bool> GetUser()
+    {
+        _newUser = await _userRepository.GetByEmailAsync(_email);
+        return _newUser is null;
+    }
+
+    private Task<bool> CreatePasswordHash()
+    {
+        _passwordHash = _passwordHelper.HashPassword(_password);
+        return Task.FromResult(true);
+    }
+
+    private async Task<bool> AddUserAsync()
+    {
+        _newUser = new User
         {
-            return new AuthResponse(ErrorMessage: error);
-        }
-        var existingUser = await _userRepository.GetByEmailAsync(command.RegisterDto.Email, cancellationToken);
-        if (existingUser is not null)
-        {
-            return new AuthResponse(ErrorMessage: "A user with this email already exists.");
-        }
-        var newUser = new User
-        {
-            Email = command.RegisterDto.Email,
-            PasswordHash = _passwordHelper.HashPassword(command.RegisterDto.Password),
+            Email = _email,
+            PasswordHash = _passwordHash
         };
-        await _userRepository.AddAsync(newUser, cancellationToken);
-        _slackClient.SendMessage(newUser.Email);
-        return new AuthResponse(Jwt: _tokenProvider.Create(newUser));
+        await _userRepository.AddAsync(_newUser); ;
+        return true;
+    }
+
+    private Task<bool> SendNewUserNotification()
+    {
+        _slackClient.SendMessage(_email);
+        return Task.FromResult(true);
+    }
+
+    private Task<bool> CreateJwt()
+    {
+        _response = new AuthResponse(Jwt: _tokenProvider.Create(_newUser));
+        return Task.FromResult(true);
     }
 }

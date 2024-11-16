@@ -1,8 +1,8 @@
 ﻿namespace Auth.Contracts.Extensions;
 
-internal static class ValidateExtensions
+public static class ValidateExtensions
 {
-    public static string Error(this Dictionary<Func<bool>, string> conditions)
+    public static string Validate(this Dictionary<Func<bool>, string> conditions)
     {
         foreach (var condition in conditions)
         {
