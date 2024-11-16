@@ -1,5 +1,5 @@
-# @Auth.Api_HostAddress = https://localhost:7153
-@Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
+@Auth.Api_HostAddress = https://localhost:7153
+#@Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
 
 ### 
 

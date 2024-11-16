@@ -33,7 +33,7 @@ public class RegisterUser(
         {
             return new AuthResponse(ErrorMessage: "Password|Please provide a password.");
         }
-        var existingUser = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
+        var existingUser = await _userRepository.GetByEmailAsync(email, cancellationToken);
         if (existingUser is not null)
         {
             return new AuthResponse(ErrorMessage: "A user with this email already exists.");
@@ -46,7 +46,7 @@ public class RegisterUser(
             CreatedDateTime = now,
             LastLoginDateTime = now
         };
-        await _userRepository.AddUserAsync(newUser, cancellationToken);
+        await _userRepository.AddAsync(newUser, cancellationToken);
         return new AuthResponse(Jwt: _tokenProvider.Create(newUser));
     }
 }
