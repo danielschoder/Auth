@@ -14,9 +14,7 @@ public static class AuthEndpoints
         static async Task<IResult> LoginAsync(LoginDto loginDto, IMediator mediator)
         {
             var authResponse = await mediator.Send(new LoginUser.Command(loginDto));
-            return authResponse.Unauthorized ?
-                Results.Unauthorized() :
-                Results.Ok(authResponse);
+            return authResponse.Authorized ? Results.Ok(authResponse) : Results.Unauthorized();
         }
 
         static async Task<IResult> RegisterAsync(RegisterDto registerDto, IMediator mediator)

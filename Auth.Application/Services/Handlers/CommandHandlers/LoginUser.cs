@@ -19,20 +19,17 @@ public class LoginUser(
 
     public async Task<AuthResponse> Handle(Command command, CancellationToken cancellationToken)
     {
-        var email = command.LoginDto.Email?.Trim().ToLower();
-        var password = command.LoginDto.Password?.Trim();
-        if (string.IsNullOrWhiteSpace(email))
+        var error = command.LoginDto.ValidateCredentials();
+        if (error is not null)
         {
-            return new AuthResponse(ErrorMessage: "Email|Please provide an email.");
+            return new AuthResponse(ErrorMessage: error);
         }
-        if (string.IsNullOrWhiteSpace(password))
+        var user = await _userRepository.GetUserByEmailAsync(command.LoginDto.Email, cancellationToken);
+        if (user is null || !_passwordHelper.PasswordIsVerified(user.PasswordHash, command.LoginDto.Password))
         {
-            return new AuthResponse(ErrorMessage: "Password|Please provide a password.");
+            return new AuthResponse(Authorized: false);
         }
-        var user = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
-        return user is not null && _passwordHelper.PasswordIsVerified(user.PasswordHash, password) ?
-            new AuthResponse(Jwt: _tokenProvider.Create(user)) :
-            new AuthResponse(Unauthorized: true);
         // Update Last Login DateTime
+        return new AuthResponse(Jwt: _tokenProvider.Create(user));
     }
 }
