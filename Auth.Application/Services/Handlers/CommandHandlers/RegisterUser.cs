@@ -34,7 +34,7 @@ public class RegisterUser(
             (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
             (CheckEmail, new AuthResponse(ErrorMessage: "Please provide an email.")),
             (CheckPassword, new AuthResponse(ErrorMessage: "Please provide a password.")),
-            (GetUser, new AuthResponse(ErrorMessage: "A user with this email already exists.")),
+            (GetUserAsync, new AuthResponse(ErrorMessage: "A user with this email already exists.")),
             (CreatePasswordHash, null),
             (AddUserAsync, null),
             (SendNewUserNotification, null),
@@ -58,7 +58,7 @@ public class RegisterUser(
     private Task<bool> CheckPassword()
         => Task.FromResult(!string.IsNullOrWhiteSpace(_password));
 
-    private async Task<bool> GetUser()
+    private async Task<bool> GetUserAsync()
     {
         _newUser = await _userRepository.GetByEmailAsync(_email);
         return _newUser is null;
@@ -83,7 +83,7 @@ public class RegisterUser(
 
     private Task<bool> SendNewUserNotification()
     {
-        _slackClient.SendMessage(_email);
+        _slackClient.SendMessage($"New registration: {_email}");
         return Task.FromResult(true);
     }
 

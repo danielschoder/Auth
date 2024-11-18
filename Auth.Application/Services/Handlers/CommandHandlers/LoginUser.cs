@@ -8,13 +8,11 @@ using MediatR;
 namespace Auth.Application.Services.Handlers.CommandHandlers;
 
 public class LoginUser(
-    IMediator mediator,
     IUserRepository userRepository,
     IPasswordHelper passwordHelper,
     ITokenProvider tokenProvider)
     : IRequestHandler<LoginUser.Command, AuthResponse>
 {
-    private readonly IMediator _mediator = mediator;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHelper _passwordHelper = passwordHelper;
     private readonly ITokenProvider _tokenProvider = tokenProvider;
