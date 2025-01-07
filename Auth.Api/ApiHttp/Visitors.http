@@ -1,0 +1,7 @@
+﻿@Auth.Api_HostAddress = https://localhost:7153
+# @Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
+
+###
+
+POST {{Auth.Api_HostAddress}}/visitors
+Content-Type: application/json

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Auth.Api.Endpoints;
 
-public static class VersionEndpoints
+public static class ServiceEndpoints
 {
     public static void MapVersionEndpoints(this IEndpointRouteBuilder app)
     {

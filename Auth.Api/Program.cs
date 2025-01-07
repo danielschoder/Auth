@@ -28,7 +28,7 @@ var app = builder.Build();
 
 app.UseForwardedHeaders();
 
-app.MapAuthEndpoints();
+app.MapPersonsEndpoints();
 app.MapVersionEndpoints();
 app.MapVisitorsEndpoints();
 

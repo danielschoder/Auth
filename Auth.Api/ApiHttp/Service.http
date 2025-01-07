@@ -3,10 +3,10 @@
 
 ### Alive
 
-GET {{Auth.Api_HostAddress}}/api
+GET {{Auth.Api_HostAddress}}/
 Accept: application/json
 
 ### Error
 
-GET {{Auth.Api_HostAddress}}/error
+POST {{Auth.Api_HostAddress}}/errors
 Accept: application/json

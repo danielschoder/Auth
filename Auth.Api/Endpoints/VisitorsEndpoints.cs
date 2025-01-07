@@ -6,7 +6,7 @@ public static class VisitorsEndpoints
 {
     public static void MapVisitorsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/visitors", AddVisitorAsync);
+        app.MapPost("/visitors", AddVisitorAsync);
 
         static void AddVisitorAsync(HttpContext httpContext, ISlackClient slackClient)
         {
