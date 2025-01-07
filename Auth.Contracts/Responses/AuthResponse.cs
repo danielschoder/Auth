@@ -1,3 +1,5 @@
-﻿namespace Auth.Contracts.Responses;
+﻿using Auth.Contracts.DTOs;
 
-public record AuthResponse(string Jwt = null, string ErrorMessage = null, bool Authorized = true);
+namespace Auth.Contracts.Responses;
+
+public record AuthResponse(UserDto User = null, string ErrorMessage = null, bool Authorized = true);

@@ -22,9 +22,6 @@ public static class UsersEndpoints
             => Results.Ok(await mediator.Send(new RegisterUser.Command(registerDto)));
 
         static async Task<IResult> UpdateUserAsync(UserUpdateDto userUpdateDto, IMediator mediator)
-        {
-            await mediator.Send(new UpdateUser.Command(userUpdateDto));
-            return Results.NoContent();
-        }
+            => Results.Ok(await mediator.Send(new UpdateUser.Command(userUpdateDto)));
     }
 }

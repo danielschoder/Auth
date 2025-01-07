@@ -90,7 +90,7 @@ public class RegisterUser(
 
         Task<bool> CreateJwt()
         {
-            _response = new AuthResponse(Jwt: _tokenProvider.Create(_newUser));
+            _response = new AuthResponse(new UserDto(_newUser.Id, _email, _tokenProvider.Create(_newUser.Id.ToString())));
             return Task.FromResult(true);
         }
     }

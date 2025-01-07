@@ -1,5 +1,4 @@
 ﻿using Auth.Application.Interfaces;
-using Auth.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,7 +11,7 @@ public class TokenProvider(IConfiguration configuration) : ITokenProvider
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public string Create(User user)
+    public string Create(string userId)
     {
         var secretKey = _configuration["Jwt:Secret"];
         var expirationInMinutes = int.Parse(_configuration["Jwt:ExpirationInMinutes"]);
@@ -24,8 +23,7 @@ public class TokenProvider(IConfiguration configuration) : ITokenProvider
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Sub, userId),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -15,7 +15,7 @@ Content-Type: application/json
 POST {{Auth.Api_HostAddress}}/users
 Content-Type: application/json
 {
-  "email": "admin9",
+  "email": "admin10",
   "password": "TESTTEST"
 }
 
@@ -25,5 +25,5 @@ PUT {{Auth.Api_HostAddress}}/users
 Content-Type: application/json
 {
   "id": "48445027-2064-4CB7-90C2-08DD07CF82D8",
-  "newEmail": "updatedemail@example.com"
+  "newEmail": "email@example.com"
 }
