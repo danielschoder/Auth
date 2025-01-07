@@ -4,12 +4,13 @@ using MediatR;
 
 namespace Auth.Api.Endpoints;
 
-public static class PersonsEndpoints
+public static class UsersEndpoints
 {
     public static void MapPersonsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/persons/login", LoginAsync);
-        app.MapPost("/persons", RegisterAsync);
+        app.MapPost("/users/login", LoginAsync);
+        app.MapPost("/users", RegisterAsync);
+        app.MapPut("/users", UpdateUserAsync);
 
         static async Task<IResult> LoginAsync(LoginDto loginDto, IMediator mediator)
         {
@@ -19,5 +20,11 @@ public static class PersonsEndpoints
 
         static async Task<IResult> RegisterAsync(RegisterDto registerDto, IMediator mediator)
             => Results.Ok(await mediator.Send(new RegisterUser.Command(registerDto)));
+
+        static async Task<IResult> UpdateUserAsync(UserUpdateDto userUpdateDto, IMediator mediator)
+        {
+            await mediator.Send(new UpdateUser.Command(userUpdateDto));
+            return Results.NoContent();
+        }
     }
 }

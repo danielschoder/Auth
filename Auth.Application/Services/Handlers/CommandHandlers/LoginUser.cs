@@ -24,7 +24,8 @@ public class LoginUser(
     public record Command(LoginDto LoginDto) : IRequest<AuthResponse>;
 
     public async Task<AuthResponse> Handle(Command command, CancellationToken cancellationToken)
-        => await command.Error(
+    {
+        return await command.Error(
         [
             (() => FormatEmailPassword(command), null),
             (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
@@ -37,40 +38,41 @@ public class LoginUser(
         ]) ??
         _response;
 
-    private Task<bool> FormatEmailPassword(Command command)
-    {
-        _email = command.LoginDto.Email?.Trim().ToLower();
-        _password = command.LoginDto.Password?.Trim();
-        return Task.FromResult(true);
-    }
+        Task<bool> FormatEmailPassword(Command command)
+        {
+            _email = command.LoginDto.Email?.Trim().ToLower();
+            _password = command.LoginDto.Password?.Trim();
+            return Task.FromResult(true);
+        }
 
-    private Task<bool> CheckEmailPassword()
-        => Task.FromResult(!string.IsNullOrWhiteSpace(_email) || !string.IsNullOrWhiteSpace(_password));
+        Task<bool> CheckEmailPassword()
+            => Task.FromResult(!string.IsNullOrWhiteSpace(_email) || !string.IsNullOrWhiteSpace(_password));
 
-    private Task<bool> CheckEmail()
-        => Task.FromResult(!string.IsNullOrWhiteSpace(_email));
+        Task<bool> CheckEmail()
+            => Task.FromResult(!string.IsNullOrWhiteSpace(_email));
 
-    private Task<bool> CheckPassword()
-        => Task.FromResult(!string.IsNullOrWhiteSpace(_password));
+        Task<bool> CheckPassword()
+            => Task.FromResult(!string.IsNullOrWhiteSpace(_password));
 
-    private async Task<bool> GetUserAsync()
-    {
-        _user = await _userRepository.GetByEmailAsync(_email);
-        return _user is not null;
-    }
+        async Task<bool> GetUserAsync()
+        {
+            _user = await _userRepository.GetByEmailAsync(_email, cancellationToken);
+            return _user is not null;
+        }
 
-    private Task<bool> VerifyPassword()
-        => Task.FromResult(_passwordHelper.IsPasswordVerified(_user.PasswordHash, _password));
+        Task<bool> VerifyPassword()
+            => Task.FromResult(_passwordHelper.IsPasswordVerified(_user.PasswordHash, _password));
 
-    private async Task<bool> UpdateLastLoginAsync()
-    {
-        await _userRepository.UpdateLastLoginAsync(_user.Id);
-        return true;
-    }
+        async Task<bool> UpdateLastLoginAsync()
+        {
+            await _userRepository.UpdateLastLoginAsync(_user.Id, cancellationToken);
+            return true;
+        }
 
-    private Task<bool> CreateJwt()
-    {
-        _response = new AuthResponse(Jwt: _tokenProvider.Create(_user));
-        return Task.FromResult(true);
+        Task<bool> CreateJwt()
+        {
+            _response = new AuthResponse(Jwt: _tokenProvider.Create(_user));
+            return Task.FromResult(true);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Auth.Application.Interfaces;
+using Auth.Contracts.DTOs;
 using Auth.Domain.Common.Interfaces;
 using Auth.Domain.Entities;
 using Auth.Infrastructure.Persistence;
@@ -14,18 +15,23 @@ public class UserRepository(
     private readonly ApplicationDbContext _context = context;
     private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-    public async Task AddAsync(User user)
+    public async Task AddAsync(User user, CancellationToken cancellationToken)
     {
         user.CreatedDateTime = user.LastLoginDateTime = _dateTimeProvider.UtcNow;
         await _context.AUTH_Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<User> GetByEmailAsync(string email)
-        => await _context.AUTH_Users.FirstOrDefaultAsync(u => u.Email == email);
+    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken)
+        => await _context.AUTH_Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
-    public async Task UpdateLastLoginAsync(Guid id)
+    public async Task UpdateUserAsync(UserUpdateDto userUpdateDto, CancellationToken cancellationToken)
+        => await _context.AUTH_Users
+            .Where(u => u.Id == userUpdateDto.Id)
+            .ExecuteUpdateAsync(u => u.SetProperty(x => x.Email, userUpdateDto.NewEmail), cancellationToken);
+
+    public async Task UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken)
         => await _context.AUTH_Users
             .Where(u => u.Id == id)
-            .ExecuteUpdateAsync(u => u.SetProperty(x => x.LastLoginDateTime, _dateTimeProvider.UtcNow));
+            .ExecuteUpdateAsync(u => u.SetProperty(x => x.LastLoginDateTime, _dateTimeProvider.UtcNow), cancellationToken);
 }
