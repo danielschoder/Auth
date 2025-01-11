@@ -25,10 +25,18 @@ public class UserRepository(
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken)
         => await _context.AUTH_Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
-    public async Task UpdateUserAsync(UserUpdateDto userUpdateDto, CancellationToken cancellationToken)
+    public async Task UpdateUserAsync(
+        Guid id,
+        UserUpdateDto userUpdateDto,
+        CancellationToken cancellationToken)
         => await _context.AUTH_Users
-            .Where(u => u.Id == userUpdateDto.Id)
-            .ExecuteUpdateAsync(u => u.SetProperty(x => x.Email, userUpdateDto.NewEmail), cancellationToken);
+            .Where(u => u.Id == id)
+            .ExecuteUpdateAsync(
+                u => u
+                    .SetProperty(x => x.Email, userUpdateDto.Email)
+                    .SetProperty(x => x.Name, userUpdateDto.Name)
+                    .SetProperty(x => x.NickName, userUpdateDto.NickName),
+                cancellationToken);
 
     public async Task UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken)
         => await _context.AUTH_Users

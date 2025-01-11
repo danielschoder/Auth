@@ -9,7 +9,10 @@ public interface IUserRepository
 
     Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
 
-    Task UpdateUserAsync(UserUpdateDto userUpdateDto, CancellationToken cancellationToken);
+    Task UpdateUserAsync(
+        Guid id,
+        UserUpdateDto userUpdateDto,
+        CancellationToken cancellationToken);
 
     Task UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken);
 }

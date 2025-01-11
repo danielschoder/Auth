@@ -1,16 +1,17 @@
 ﻿using Auth.Application.Services.Handlers.CommandHandlers;
 using Auth.Contracts.DTOs;
 using MediatR;
+using System.Security.Claims;
 
 namespace Auth.Api.Endpoints;
 
 public static class UsersEndpoints
 {
-    public static void MapPersonsEndpoints(this IEndpointRouteBuilder app)
+    public static void MapUsersEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/users/login", LoginAsync);
         app.MapPost("/users", RegisterAsync);
-        app.MapPut("/users", UpdateUserAsync);
+        app.MapPut("/users", UpdateUserAsync).RequireAuthorization();
 
         static async Task<IResult> LoginAsync(LoginDto loginDto, IMediator mediator)
         {
@@ -21,7 +22,10 @@ public static class UsersEndpoints
         static async Task<IResult> RegisterAsync(RegisterDto registerDto, IMediator mediator)
             => Results.Ok(await mediator.Send(new RegisterUser.Command(registerDto)));
 
-        static async Task<IResult> UpdateUserAsync(UserUpdateDto userUpdateDto, IMediator mediator)
-            => Results.Ok(await mediator.Send(new UpdateUser.Command(userUpdateDto)));
+        static async Task<IResult> UpdateUserAsync(
+            ClaimsPrincipal user,
+            UserUpdateDto userUpdateDto,
+            IMediator mediator)
+            => Results.Ok(await mediator.Send(new UpdateUser.Command(user.GetId(), userUpdateDto)));
     }
 }

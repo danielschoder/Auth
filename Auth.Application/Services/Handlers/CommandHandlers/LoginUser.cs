@@ -71,7 +71,14 @@ public class LoginUser(
 
         Task<bool> CreateJwt()
         {
-            _authResponse = new AuthResponse(new UserDto(_user.Id, _email, _tokenProvider.Create(_user.Id.ToString())));
+            _authResponse = new AuthResponse(new UserDto
+                (
+                    _user.Id,
+                    _email,
+                    _user.Name,
+                    _user.NickName,
+                    _tokenProvider.Create(_user.Id.ToString()))
+                );
             return Task.FromResult(true);
         }
     }

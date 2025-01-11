@@ -6,6 +6,10 @@ public class User
 
     public string Email { get; set; }
 
+    public string Name { get; set; }
+
+    public string NickName { get; set; }
+
     public string PasswordHash { get; set; }
 
     public DateTime CreatedDateTime { get; set; }

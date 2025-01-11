@@ -4,6 +4,7 @@
 ### Login
 
 POST {{Auth.Api_HostAddress}}/users/login
+Accept: application/json
 Content-Type: application/json
 {
   "email": "dietmar@schoder.uk",
@@ -13,6 +14,7 @@ Content-Type: application/json
 ### Register
 
 POST {{Auth.Api_HostAddress}}/users
+Accept: application/json
 Content-Type: application/json
 {
   "email": "admin10",
@@ -22,8 +24,11 @@ Content-Type: application/json
 ### Update User details
 
 PUT {{Auth.Api_HostAddress}}/users
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGQxY2EzOC02YjY3LTQ2ZmQtYWQyMS1iMWI2OGRlMjI1NjciLCJqdGkiOiIyY2MwN2U0OS03ZjFlLTQwZmMtYjBmOC02NzY4NDI4MzI0YTQiLCJuYmYiOjE3MzY2MDk5MjIsImV4cCI6MTczNjYxMzUyMiwiaWF0IjoxNzM2NjA5OTIyLCJpc3MiOiJTY2hvZGVyRmFjdG9yeSIsImF1ZCI6IlNjaG9kZXJGYWN0b3J5In0.aI-eOisGCM-NsX9gJCETrwSyDMYEfM5_BQp1z-LAM7A
 Content-Type: application/json
 {
-  "id": "48445027-2064-4CB7-90C2-08DD07CF82D8",
-  "newEmail": "email@example.com"
+  "email": "dietmar@schoder.uk",
+  "name": "Dietmar Schoder",
+  "nickName": "DS"
 }

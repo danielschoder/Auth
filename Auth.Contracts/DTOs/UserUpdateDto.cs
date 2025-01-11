@@ -1,3 +1,3 @@
 ﻿namespace Auth.Contracts.DTOs;
 
-public record UserUpdateDto(Guid Id, string NewEmail);
+public record UserUpdateDto(string Email, string Name, string NickName);

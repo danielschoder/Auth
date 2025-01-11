@@ -5,7 +5,7 @@ namespace Auth.Api.Endpoints;
 
 public static class ServiceEndpoints
 {
-    public static void MapVersionEndpoints(this IEndpointRouteBuilder app)
+    public static void MapServiceEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/", GetVersionAsync);
         app.MapGet("/api", GetVersionAsync);
