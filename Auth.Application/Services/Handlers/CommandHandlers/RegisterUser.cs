@@ -23,7 +23,7 @@ public class RegisterUser(
     private string _password;
     private string _passwordHash;
     private User _newUser;
-    private AuthResponse _response;
+    private AuthResponse _authResponse;
 
     public record Command(RegisterDto RegisterDto) : IRequest<AuthResponse>;
 
@@ -41,7 +41,7 @@ public class RegisterUser(
             (SendNewUserNotification, null),
             (CreateJwt, null)
             ]) ??
-            _response;
+            _authResponse;
 
         Task<bool> FormatEmailPassword(Command command)
         {
@@ -90,7 +90,7 @@ public class RegisterUser(
 
         Task<bool> CreateJwt()
         {
-            _response = new AuthResponse(new UserDto(_newUser.Id, _email, _tokenProvider.Create(_newUser.Id.ToString())));
+            _authResponse = new AuthResponse(new UserDto(_newUser.Id, _email, _tokenProvider.Create(_newUser.Id.ToString())));
             return Task.FromResult(true);
         }
     }

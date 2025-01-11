@@ -19,7 +19,7 @@ public class LoginUser(
     private string _email;
     private string _password;
     private User _user;
-    private AuthResponse _response;
+    private AuthResponse _authResponse;
 
     public record Command(LoginDto LoginDto) : IRequest<AuthResponse>;
 
@@ -36,7 +36,7 @@ public class LoginUser(
             (UpdateLastLoginAsync, null),
             (CreateJwt, null)
         ]) ??
-        _response;
+        _authResponse;
 
         Task<bool> FormatEmailPassword(Command command)
         {
@@ -71,7 +71,7 @@ public class LoginUser(
 
         Task<bool> CreateJwt()
         {
-            _response = new AuthResponse(new UserDto(_user.Id, _email, _tokenProvider.Create(_user.Id.ToString())));
+            _authResponse = new AuthResponse(new UserDto(_user.Id, _email, _tokenProvider.Create(_user.Id.ToString())));
             return Task.FromResult(true);
         }
     }
