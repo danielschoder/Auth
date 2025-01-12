@@ -13,6 +13,7 @@ public class UpdateUser(IUserRepository userRepository)
 
     public async Task<UserUpdateDto> Handle(Command command, CancellationToken cancellationToken)
     {
+        // TODO: Check if user with the new email already exists, if yes, return error
         var updateUserDto = command.UserUpdateDto with
         {
             Email = command.UserUpdateDto.Email?.Trim().ToLower(),
