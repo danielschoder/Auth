@@ -1,12 +1,13 @@
-﻿# @Auth.Api_HostAddress = https://localhost:7153
-@Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
+﻿@Auth.Api_HostAddress = https://localhost:7010
+// @Auth.Api_HostAddress = https://schoderauth.azurewebsites.net
 
 ### Alive
 
 GET {{Auth.Api_HostAddress}}/
 Accept: application/json
 
-### Error
+### Generate exception
 
-POST {{Auth.Api_HostAddress}}/errors
+POST {{Auth.Api_HostAddress}}/exceptions
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGQxY2EzOC02YjY3LTQ2ZmQtYWQyMS1iMWI2OGRlMjI1NjciLCJlbWFpbCI6ImRpZXRtYXJAc2Nob2Rlci51ayIsImp0aSI6ImE4MzY4MTRlLTg3ODItNDA4MC1hYzA5LTFiNjIwYmI0ZWMxNSIsIm5iZiI6MTczMjk3NDEyOSwiZXhwIjoxNzMzMTkwMTI5LCJpYXQiOjE3MzI5NzQxMjksImlzcyI6IlNjaG9kZXJGYWN0b3J5IiwiYXVkIjoiU2Nob2RlckZhY3RvcnkifQ.08iW-RQIMfYBYioJuKDBo8ZuX_nians526hLELdWFOc

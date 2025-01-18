@@ -1,11 +1,13 @@
 ﻿using Auth.Application.Interfaces;
 using Auth.Contracts.DTOs;
+using Auth.Domain.Common.Interfaces;
 using MediatR;
 
 namespace Auth.Application.Services.Handlers.CommandHandlers;
-
-public class UpdateUser(IUserRepository userRepository)
-    : IRequestHandler<UpdateUser.Command, UserUpdateDto>
+public class UpdateUser(
+    IUserRepository userRepository,
+    IScopedLogger logger)
+    : HandlerBase(logger), IRequestHandler<UpdateUser.Command, UserUpdateDto>
 {
     private readonly IUserRepository _userRepository = userRepository;
 
@@ -13,6 +15,7 @@ public class UpdateUser(IUserRepository userRepository)
 
     public async Task<UserUpdateDto> Handle(Command command, CancellationToken cancellationToken)
     {
+        Log($"command.Id: [{command.Id}]");
         // TODO: Check if user with the new email already exists, if yes, return error
         var updateUserDto = command.UserUpdateDto with
         {

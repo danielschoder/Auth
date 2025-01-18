@@ -1,6 +1,7 @@
 using Auth.Api.Endpoints;
 using Auth.Api.Extensions;
 using Auth.Application.Services.Handlers.QueryHandlers;
+using Auth.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 
@@ -15,7 +16,7 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetVersion).Assembly));
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Environment);
 builder.Services.AddExternalServices();
 
 var app = builder.Build();
@@ -25,6 +26,9 @@ app.UseCors("AllowAnyPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<LogHttpCallMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapServiceEndpoints();
 app.MapVisitorsEndpoints();

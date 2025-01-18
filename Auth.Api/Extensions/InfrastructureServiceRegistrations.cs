@@ -14,14 +14,28 @@ public static class InfrastructureServiceRegistrations
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         services.AddScoped<IUserRepository, UserRepository>();
+
         return services;
     }
 
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IWebHostEnvironment environment)
     {
+        var isDevelopment = environment.IsDevelopment();
+
+        services.AddHttpContextAccessor();
+
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IPasswordHelper, PasswordHelper>();
         services.AddSingleton<ITokenProvider, TokenProvider>();
+
+        services.AddScoped<IScopedLogger, ScopedLogger>();
+        services.AddScoped(typeof(IExceptionService),
+            isDevelopment
+            ? typeof(ExceptionInDevelopmentService) // ExceptionInDevelopmentService
+            : typeof(ExceptionInProductionService));
+
         return services;
     }
 }
