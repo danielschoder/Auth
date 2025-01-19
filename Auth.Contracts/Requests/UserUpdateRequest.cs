@@ -1,3 +1,16 @@
-﻿namespace Auth.Contracts.Requests;
+﻿
+using Auth.Domain.Entities;
 
-public record UserUpdateRequest(string Email, string Name, string NickName);
+namespace Auth.Contracts.Requests;
+
+public record UserUpdateRequest(string Email, string Name, string NickName)
+{
+    public User AsUser(Guid id)
+        => new()
+        {
+            Id = id,
+            Email = Email,
+            Name = Name,
+            NickName = NickName
+        };
+}
