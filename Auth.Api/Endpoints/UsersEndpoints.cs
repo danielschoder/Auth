@@ -1,4 +1,5 @@
-﻿using Auth.Application.Services.Handlers.CommandHandlers;
+﻿using Auth.Api.Extensions;
+using Auth.Application.Services.Handlers.CommandHandlers;
 using Auth.Contracts.DTOs;
 using MediatR;
 using System.Security.Claims;
@@ -23,9 +24,10 @@ public static class UsersEndpoints
             => Results.Ok(await mediator.Send(new RegisterUser.Command(registerDto)));
 
         static async Task<IResult> UpdateUserAsync(
+            HttpContext httpContext,
             ClaimsPrincipal user,
             UserUpdateDto userUpdateDto,
             IMediator mediator)
-            => Results.Ok(await mediator.Send(new UpdateUser.Command(user.GetId(), userUpdateDto)));
+            => Results.Ok(await mediator.Send(new UpdateUser.Command(user.GetId(), userUpdateDto, httpContext.GetJwtToken())));
     }
 }

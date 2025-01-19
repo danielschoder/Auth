@@ -19,7 +19,7 @@ public class SlackClient(
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
         Task.Run(async () =>
         {
-            await _httpClient.PostAsync(_configuration["SlackUrl"], content);
+            var response = await _httpClient.PostAsync(_configuration["Slack:Path"], content);
         });
     }
 }

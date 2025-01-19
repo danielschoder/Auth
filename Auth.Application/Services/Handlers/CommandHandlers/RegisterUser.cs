@@ -31,7 +31,7 @@ public class RegisterUser(
     {
         return await command.Error(
             [
-                (() => FormatEmailPassword(command), null),
+            (() => FormatEmailPassword(command), null),
             (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
             (CheckEmail, new AuthResponse(ErrorMessage: "Please provide an email.")),
             (CheckPassword, new AuthResponse(ErrorMessage: "Please provide a password.")),

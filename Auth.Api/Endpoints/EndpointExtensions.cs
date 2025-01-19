@@ -17,5 +17,8 @@ namespace Auth.Api.Endpoints
 
         public static Guid GetId(this ClaimsPrincipal user)
             => Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public static string GetJwt(this ClaimsPrincipal user)
+            => user.FindFirstValue("jwt");
     }
 }

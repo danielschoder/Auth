@@ -17,7 +17,7 @@ builder.Services.AddAuthorizationServices(builder.Configuration);
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetVersion).Assembly));
 builder.Services.AddInfrastructureServices(builder.Environment);
-builder.Services.AddExternalServices();
+builder.Services.AddExternalServices(builder.Configuration);
 
 var app = builder.Build();
 
