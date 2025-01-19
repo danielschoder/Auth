@@ -1,6 +1,9 @@
-﻿using Auth.Application.Interfaces;
+﻿using Auth.Application.Extensions;
+using Auth.Application.Interfaces;
 using Auth.Contracts.DTOs;
 using Auth.Contracts.ExternalServices;
+using Auth.Contracts.Requests;
+using Auth.Contracts.Responses;
 using Auth.Domain.Common.Interfaces;
 using MediatR;
 
@@ -10,30 +13,49 @@ public class UpdateUser(
     IUserRepository userRepository,
     IWbsToolApiClient wbsToolApiClient,
     IScopedLogger logger)
-    : HandlerBase(logger), IRequestHandler<UpdateUser.Command, UserUpdateDto>
+    : HandlerBase(logger), IRequestHandler<UpdateUser.Command, UserUpdateResponse>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IWbsToolApiClient _wbsToolApiClient = wbsToolApiClient;
+    private UserUpdateRequest _userUpdateRequest;
+    private UserUpdateResponse _userUpdateResponse;
 
-    public record Command(Guid Id, UserUpdateDto UserUpdateDto, string Jwt) : IRequest<UserUpdateDto>;
+    public record Command(Guid Id, UserUpdateRequest UserUpdateRequest, string Jwt) : IRequest<UserUpdateResponse>;
 
-    public async Task<UserUpdateDto> Handle(Command command, CancellationToken cancellationToken)
+    public async Task<UserUpdateResponse> Handle(Command command, CancellationToken cancellationToken)
     {
         Log($"command.Id: [{command.Id}]");
+        return await command.Error(
+            [
+                (() => FormatUserData(command), null),
+                (CheckEmail, new UserUpdateResponse(ErrorMessage: "Please provide an email.")),
+                (UpdateUserAsync, null),
+                (UpdatePersonAsync, null)
+            ]) ??
+            _userUpdateResponse;
 
-        // TODO: Check if user with the new email already exists, if yes, return error
-
-        var updateUserDto = command.UserUpdateDto with
+        Task<bool> FormatUserData(Command command)
         {
-            Email = command.UserUpdateDto.Email?.Trim().ToLower(),
-            Name = command.UserUpdateDto.Name?.Trim(),
-            NickName = command.UserUpdateDto.NickName?.Trim(),
-        };
-        await _userRepository.UpdateUserAsync(command.Id, updateUserDto, cancellationToken);
+            _userUpdateRequest = command.UserUpdateRequest with
+            {
+                Email = command.UserUpdateRequest.Email?.Trim().ToLower(),
+                Name = command.UserUpdateRequest.Name?.Trim(),
+                NickName = command.UserUpdateRequest.NickName?.Trim(),
+            };
+            return Task.FromResult(true);
+        }
 
-        var personDto = new PersonDto(command.Id, updateUserDto.Email, updateUserDto.Name, updateUserDto.NickName);
-        await _wbsToolApiClient.UpdatePersonAsync(personDto, command.Jwt);
+        Task<bool> CheckEmail()
+            => Task.FromResult(!string.IsNullOrWhiteSpace(_userUpdateRequest.Email));
 
-        return updateUserDto;
+        async Task<bool> UpdateUserAsync()
+            => await _userRepository.UpdateUserAsync(command.Id, _userUpdateRequest, cancellationToken);
+
+        async Task<bool> UpdatePersonAsync()
+        {
+            _userUpdateResponse = new UserUpdateResponse(_userUpdateRequest);
+            var personDto = new PersonDto(command.Id, _userUpdateRequest.Email, _userUpdateRequest.Name, _userUpdateRequest.NickName);
+            return await _wbsToolApiClient.UpdatePersonAsync(personDto, command.Jwt);
+        }
     }
 }

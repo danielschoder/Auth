@@ -64,10 +64,7 @@ public class LoginUser(
             => Task.FromResult(_passwordHelper.IsPasswordVerified(_user.PasswordHash, _password));
 
         async Task<bool> UpdateLastLoginAsync()
-        {
-            await _userRepository.UpdateLastLoginAsync(_user.Id, cancellationToken);
-            return true;
-        }
+            => await _userRepository.UpdateLastLoginAsync(_user.Id, cancellationToken);
 
         Task<bool> CreateJwt()
         {

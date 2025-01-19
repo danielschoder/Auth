@@ -17,7 +17,7 @@ public class WbsToolApiClient(
     private readonly IConfiguration _configuration = configuration;
     private readonly IScopedLogger _scopedLogger = scopedLogger;
 
-    public async Task UpdatePersonAsync(PersonDto personDto, string jwt)
+    public async Task<bool> UpdatePersonAsync(PersonDto personDto, string jwt)
     {
         var url = $"{_configuration["WBStoolAPI:Url"]}/persons/{personDto.Id}";
         _scopedLogger.Log(url);
@@ -31,5 +31,6 @@ public class WbsToolApiClient(
 
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
+        return true;
     }
 }

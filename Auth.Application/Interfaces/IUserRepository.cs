@@ -1,18 +1,18 @@
-﻿using Auth.Contracts.DTOs;
+﻿using Auth.Contracts.Requests;
 using Auth.Domain.Entities;
 
 namespace Auth.Application.Interfaces;
 
 public interface IUserRepository
 {
-    Task AddAsync(User user, CancellationToken cancellationToken);
+    Task<bool> AddAsync(User user, CancellationToken cancellationToken);
 
     Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
 
-    Task UpdateUserAsync(
+    Task<bool> UpdateUserAsync(
         Guid id,
-        UserUpdateDto userUpdateDto,
+        UserUpdateRequest userUpdateDto,
         CancellationToken cancellationToken);
 
-    Task UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken);
+    Task<bool> UpdateLastLoginAsync(Guid id, CancellationToken cancellationToken);
 }

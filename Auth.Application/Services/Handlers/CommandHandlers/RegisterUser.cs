@@ -31,15 +31,15 @@ public class RegisterUser(
     {
         return await command.Error(
             [
-            (() => FormatEmailPassword(command), null),
-            (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
-            (CheckEmail, new AuthResponse(ErrorMessage: "Please provide an email.")),
-            (CheckPassword, new AuthResponse(ErrorMessage: "Please provide a password.")),
-            (GetUserAsync, new AuthResponse(ErrorMessage: "A user with this email already exists.")),
-            (CreatePasswordHash, null),
-            (AddUserAsync, null),
-            (SendNewUserNotification, null),
-            (CreateJwt, null)
+                (() => FormatEmailPassword(command), null),
+                (CheckEmailPassword, new AuthResponse(ErrorMessage: "Please provide an email and a password.")),
+                (CheckEmail, new AuthResponse(ErrorMessage: "Please provide an email.")),
+                (CheckPassword, new AuthResponse(ErrorMessage: "Please provide a password.")),
+                (GetUserAsync, new AuthResponse(ErrorMessage: "A user with this email already exists.")),
+                (CreatePasswordHash, null),
+                (AddUserAsync, null),
+                (SendNewUserNotification, null),
+                (CreateJwt, null)
             ]) ??
             _authResponse;
 
@@ -78,8 +78,7 @@ public class RegisterUser(
                 Email = _email,
                 PasswordHash = _passwordHash
             };
-            await _userRepository.AddAsync(_newUser, cancellationToken); ;
-            return true;
+            return await _userRepository.AddAsync(_newUser, cancellationToken); ;
         }
 
         Task<bool> SendNewUserNotification()

@@ -4,5 +4,5 @@ namespace Auth.Contracts.ExternalServices;
 
 public interface IWbsToolApiClient
 {
-    Task UpdatePersonAsync(PersonDto personDto, string jwt);
+    Task<bool> UpdatePersonAsync(PersonDto personDto, string jwt);
 }

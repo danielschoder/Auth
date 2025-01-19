@@ -28,7 +28,7 @@ Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGQxY2EzOC02YjY3LTQ2ZmQtYWQyMS1iMWI2OGRlMjI1NjciLCJqdGkiOiIyY2MwN2U0OS03ZjFlLTQwZmMtYjBmOC02NzY4NDI4MzI0YTQiLCJuYmYiOjE3MzY2MDk5MjIsImV4cCI6MTczNjYxMzUyMiwiaWF0IjoxNzM2NjA5OTIyLCJpc3MiOiJTY2hvZGVyRmFjdG9yeSIsImF1ZCI6IlNjaG9kZXJGYWN0b3J5In0.aI-eOisGCM-NsX9gJCETrwSyDMYEfM5_BQp1z-LAM7A
 Content-Type: application/json
 {
-  "email": "dietmar@schoder.uk2",
-  "name": "Dietmar Schoder2",
+  "email": "dietmar@schoder.uk",
+  "name": "Dietmar Schoder",
   "nickName": "DS2"
 }
